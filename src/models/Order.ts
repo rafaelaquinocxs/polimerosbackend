@@ -107,4 +107,5 @@ OrderSchema.index({ representative: 1 });
 OrderSchema.index({ status: 1 });
 OrderSchema.index({ orderNumber: 1 });
 
-export default mongoose.models.Order || mongoose.model<IOrder>('Order', OrderSchema);
+const Order = mongoose.models.Order || mongoose.model<IOrder>('Order', OrderSchema);
+export default Order;
