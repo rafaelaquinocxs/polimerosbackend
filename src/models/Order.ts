@@ -92,10 +92,10 @@ const OrderSchema: Schema = new Schema({
 });
 
 // Calcular valor total antes de salvar
-OrderSchema.pre('save', function(next) {
-  if (this.items && this.items.length > 0) {
-    this.totalValue = this.items.reduce((total: number, item: any) => {
-      return total + (item.quantity * item.unitPrice);
+OrderSchema.pre<IOrder>('save', function (next) {
+  if (Array.isArray(this.items) && this.items.length > 0) {
+    this.totalValue = this.items.reduce((total, item) => {
+      return total + item.quantity * item.unitPrice;
     }, 0);
   }
   next();
