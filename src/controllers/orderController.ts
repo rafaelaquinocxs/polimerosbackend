@@ -142,7 +142,7 @@ export const getOrderById = async (req: Request, res: Response, next: NextFuncti
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // CORREÇÃO: Gerar orderNumber único antes de criar
+    // Gerar orderNumber único antes de criar
     const timestamp = Date.now().toString();
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     const orderNumber = `PED${timestamp.slice(-6)}${random}`;
@@ -244,22 +244,22 @@ export const getDashboardStats = async (req: Request, res: Response, next: NextF
     ]).then(result => result[0]?.total || 0);
     
     const pendingOrders = await Order.countDocuments({ status: 'Pendente' });
-    const billedOrders = await Order.countDocuments({ status: 'Faturado' });
+    const confirmedOrders = await Order.countDocuments({ status: 'Confirmado' });
     
     // Valores dos pedidos
     const pendingValue = await Order.aggregate([
       { $match: { status: 'Pendente' } },
-      { $group: { _id: null, total: { $sum: '$total' } } }
+      { $group: { _id: null, total: { $sum: '$totalValue' } } }
     ]).then(result => result[0]?.total || 0);
     
-    const billedValue = await Order.aggregate([
-      { $match: { status: 'Faturado' } },
-      { $group: { _id: null, total: { $sum: '$total' } } }
+    const confirmedValue = await Order.aggregate([
+      { $match: { status: 'Confirmado' } },
+      { $group: { _id: null, total: { $sum: '$totalValue' } } }
     ]).then(result => result[0]?.total || 0);
     
-    const totalOrders = pendingOrders + billedOrders;
-    const totalValue = pendingValue + billedValue;
-    const billingRate = totalOrders > 0 ? (billedOrders / totalOrders) * 100 : 0;
+    const totalOrders = pendingOrders + confirmedOrders;
+    const totalValue = pendingValue + confirmedValue;
+    const billingRate = totalOrders > 0 ? (confirmedOrders / totalOrders) * 100 : 0;
 
     res.status(200).json({
       success: true,
@@ -267,9 +267,9 @@ export const getDashboardStats = async (req: Request, res: Response, next: NextF
         totalClients,
         totalProducts,
         pendingOrders,
-        billedOrders,
+        confirmedOrders,
         pendingValue,
-        billedValue,
+        confirmedValue,
         totalOrders,
         totalValue,
         billingRate: Math.round(billingRate * 100) / 100

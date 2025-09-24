@@ -1,16 +1,16 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IOrderItem {
-  product: string;
+  product: Types.ObjectId;  // Corrigido: era string
   quantity: number;
   unitPrice: number;
 }
 
 export interface IOrder extends Document {
   orderNumber: string;
-  client: string;
-  representative: string;
-  carrier: string;
+  client: Types.ObjectId;          // Corrigido: era string
+  representative: Types.ObjectId;  // Corrigido: era string
+  carrier: Types.ObjectId;         // Corrigido: era string
   orderDate: Date;
   paymentConditions: string;
   status: string;
