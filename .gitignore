@@ -1,0 +1,19 @@
+# Dependências
+/node_modules
+
+# Build
+/dist
+
+# Configurações locais
+.env
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
